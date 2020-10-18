@@ -4,7 +4,9 @@ addLayer("t", {
         position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
         startData() { return {
             unlocked: true,
-			points: new Decimal(0),
+            points: new Decimal(0),
+            best: new Decimal(0),
+
         }},
         color: "#e33702",
         requires: new Decimal(10), // Can be a function that takes requirement increases into account
@@ -40,7 +42,15 @@ addLayer("t", {
                         'background-color': '#e33702' 
                 }},
             },
-
+            1: {requirementDescription: "3 Kelvins",
+                //unlocked() {return hasMilestone(this.layer, 0)},
+                done() {return player[this.layer].points.gte(3)},
+                effectDescription: "Does a thing.",
+                style() {                     
+                    if(hasMilestone(this.layer, this.id)) return {
+                        'background-color': '#e33702' 
+                }},
+            },
         },
 
         upgrades: {
@@ -54,6 +64,18 @@ addLayer("t", {
                 currencyInternalName: "points", // Use if using a nonstandard currency
 
                 unlocked() { return hasMilestone(this.layer, 0) }, // The upgrade is only visible when this is true
+            },
+            12: {
+                title: "Energizer Bunny",
+                description: "Multiply joule gain based on your joules.",
+                cost: new Decimal(20),
+                currencyDisplayName: "joules", // Use if using a nonstandard currency
+                currencyInternalName: "points", // Use if using a nonstandard currency
+
+                unlocked() { return hasMilestone(this.layer, 0) }, // The upgrade is only visible when this is true
+                effect(){
+                    return(player.points.pow(0.25).times(0.5).plus(1))
+                }
             },
         },
 
